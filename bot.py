@@ -2226,23 +2226,29 @@ Test Result: {result.get('test_result', 'N/A')}
     # -------------------------------------------------------------------------
     
     async def stats_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        user_id = update.effective_user.id
-        stats = await self.db.get_stats(user_id)
-        
-        msg = f"""
+    user_id = update.effective_user.id
+    stats = await self.db.get_stats(user_id)
+    
+    # Calculate success rate safely
+    if stats['total'] > 0:
+        success_rate = (stats['valid'] / stats['total']) * 100
+    else:
+        success_rate = 0
+    
+    msg = f"""
 📊 *Your Statistics*
 
 ✅ Total Checks: {stats['total']}
 ⭐ Valid CCs: {stats['valid']}
-📈 Success Rate: {stats['valid']/stats['total']*100:.2f}% if stats['total'] > 0 else 0}%
+📈 Success Rate: {success_rate:.2f}%
 
 📊 *Overall Bot Stats*
 • Active Users: {await self._get_user_count()}
 • Total Checks: {await self._get_total_checks()}
 • Valid CCs: {await self._get_valid_checks()}
-        """
-        
-        await update.message.reply_text(msg, parse_mode='Markdown')
+    """
+    
+    await update.message.reply_text(msg, parse_mode='Markdown')
 
     async def profile_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_id = update.effective_user.id
