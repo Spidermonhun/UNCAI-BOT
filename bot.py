@@ -23,8 +23,8 @@ except: pass
 # ======================================================================
 # CONFIG
 # ======================================================================
-BOT_TOKEN = "7717578995:AAFsgXYwMCu5i6jI-s3OP-g9S7GqSBw4cTs"
-OWNER_ID = 7738224913
+BOT_TOKEN = "8849423711:AAGBSTQozY8r5jTDTvZMpAo01T2Z_0Hfxvw"
+OWNER_ID = 6961586523
 ADMIN_IDS = [OWNER_ID]
 DB_PATH = "/tmp/ultimate_cc_bot.db"
 MAX_BATCH = 500000  # 5 Lakh CCs
