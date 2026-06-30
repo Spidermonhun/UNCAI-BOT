@@ -1966,7 +1966,28 @@ Test Result: {result.get('test_result', 'N/A')}
         """
         
         await update.message.reply_text(msg, parse_mode='Markdown')
-
+    
+    async def set_admin_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        user_id = update.effective_user.id
+        user = await self.db.get_user(user_id)
+    
+        # Only owner can use this
+        if user_id != OWNER_ID:
+            await update.message.reply_text("❌ Only the bot owner can use this")
+            return
+    
+        args = context.args
+        if not args:
+            await update.message.reply_text("❌ Usage: /setadmin user_id")
+            return
+    
+        target_id = int(args[0])
+        async with aiosqlite.connect(DB_PATH) as db:
+            await db.execute("UPDATE users SET is_admin = 1 WHERE user_id = ?", (target_id,))
+            await db.commit()
+    
+        await update.message.reply_text(f"✅ User {target_id} is now admin")
+   
     # -------------------------------------------------------------------------
     # CHECK COMMANDS
     # -------------------------------------------------------------------------
