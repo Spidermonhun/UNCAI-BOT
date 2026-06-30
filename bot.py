@@ -1269,6 +1269,13 @@ class CCBot:
         
         self.application = Application.builder().token(token).build()
         self._register_handlers()
+            # FORCE ADMIN - FIX
+        try:
+            cursor.execute("UPDATE users SET is_admin = 1 WHERE user_id = ?", (OWNER_ID,))
+            conn.commit()
+        except:
+            pass
+        conn.close()
 
     def _register_handlers(self):
         app = self.application
