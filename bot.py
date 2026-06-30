@@ -2234,8 +2234,13 @@ Test Result: {result.get('test_result', 'N/A')}
             success_rate = (stats['valid'] / stats['total']) * 100
         else:
             success_rate = 0
+            
+       # Get stats outside the f-string
+        user_count = await self._get_user_count()
+        total_checks = await self._get_total_checks()
+        valid_checks = await self._get_valid_checks()
     
-    msg = f"""
+        msg = f"""
 📊 *Your Statistics*
 
 ✅ Total Checks: {stats['total']}
@@ -2243,12 +2248,12 @@ Test Result: {result.get('test_result', 'N/A')}
 📈 Success Rate: {success_rate:.2f}%
 
 📊 *Overall Bot Stats*
-• Active Users: {await self._get_user_count()}
-• Total Checks: {await self._get_total_checks()}
-• Valid CCs: {await self._get_valid_checks()}
+• Active Users: {user_count}
+• Total Checks: {total_checks}
+• Valid CCs: {valid_checks}
     """
     
-    await update.message.reply_text(msg, parse_mode='Markdown')
+        await update.message.reply_text(msg, parse_mode='Markdown')
 
     async def profile_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_id = update.effective_user.id
