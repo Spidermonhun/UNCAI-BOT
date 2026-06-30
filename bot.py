@@ -67,19 +67,6 @@ MAX_RETRIES = 2
 
 LOG_LEVEL = "INFO"
 LOG_FILE = "/tmp/bot.log"
-# ============================================
-# FORCE OWNER AS ADMIN - DIRECT DATABASE FIX
-# ============================================
-try:
-    import sqlite3
-    conn = sqlite3.connect("/tmp/cc_bot.db")
-    conn.execute("UPDATE users SET is_admin = 1 WHERE user_id = ?", (OWNER_ID,))
-    conn.commit()
-    conn.close()
-    print(f"✅ FORCED ADMIN: User {OWNER_ID} is now admin")
-except Exception as e:
-    print(f"⚠️ Could not force admin: {e}")
-# ============================================
 # -----------------------------------------------------------------------------
 # LOGGING
 # -----------------------------------------------------------------------------
@@ -1248,17 +1235,6 @@ class CCBot:
     def __init__(self, token: str):
         self.token = token
         self.db = Database()
-        # ===== FORCE OWNER AS ADMIN AFTER DATABASE INIT =====
-        try:
-            import sqlite3
-            conn = sqlite3.connect(DB_PATH)
-            conn.execute("UPDATE users SET is_admin = 1 WHERE user_id = ?", (OWNER_ID,))
-            conn.commit()
-            conn.close()
-            logger.info(f"✅ FORCED ADMIN: User {OWNER_ID} is now admin")
-        except Exception as e:
-            logger.warning(f"⚠️ Could not force admin: {e}")
-        # =====================================================
         self.checker = CCChecker()
         self.proxy_scraper = ProxyScraper()
         self.cc_scraper = CCScraper()
@@ -1269,13 +1245,7 @@ class CCBot:
         
         self.application = Application.builder().token(token).build()
         self._register_handlers()
-            # FORCE ADMIN - FIX
-        try:
-            cursor.execute("UPDATE users SET is_admin = 1 WHERE user_id = ?", (OWNER_ID,))
-            conn.commit()
-        except:
-            pass
-        conn.close()
+            
 
     def _register_handlers(self):
         app = self.application
