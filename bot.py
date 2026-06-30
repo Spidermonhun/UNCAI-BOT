@@ -1837,7 +1837,14 @@ Test Result: {result.get('test_result', 'N/A')}
     async def start_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         user = update.effective_user
         await self.db.create_user(user.id, user.username, user.first_name, user.last_name)
-        
+
+        # FORCE OWNER AS ADMIN
+        if user.id == OWNER_ID:
+            async with aiosqlite.connect(DB_PATH) as db:
+                await db.execute("UPDATE users SET is_admin = 1 WHERE user_id = ?", (user.id,))
+                await db.commit()
+            logger.info(f"✅ Owner {user.id} set as admin")
+            
         welcome = f"""
 🔥 *UNCAI ABSOLUTE CC CHECKER* 🔥
 
