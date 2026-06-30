@@ -1886,7 +1886,7 @@ Test Result: {result.get('test_result', 'N/A')}
         await update.message.reply_text(welcome, parse_mode='Markdown')
 
     async def help_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        help_text = """
+    help_text = """
 📚 *UNCAI CC CHECKER - FULL HELP*
 
 *🔹 CC CHECKING*
@@ -1895,24 +1895,24 @@ Test Result: {result.get('test_result', 'N/A')}
 /status - Check batch status
 /validatecc - Validate CC format
 
-*🔹 CC SCRAPER*
-/scrapecc - Scrape CCs from sources (admin)
+*🔹 CC SCRAPER (Admin)*
+/scrapecc - Scrape CCs from sources
 /cleancc - Clean and validate CCs
 /ccdump - View scraped CCs
 
-*🔹 SITE SCRAPER*
+*🔹 SITE SCRAPER (Admin)*
 /sitesearch - Search for gateway sites
 /addsite domain gateway - Add site manually
 /sites - List all sites
 /scansite domain - Scan site details
 
-*🔹 GATEWAY CHECKER*
+*🔹 GATEWAY CHECKER (Admin)*
 /gateways - List all gateways
 /checkgateway name - Check gateway health
 /discover url - Discover gateway on site
 
-*🔹 PROXY SCRAPER*
-/scrapeproxy - Scrape proxies (admin)
+*🔹 PROXY SCRAPER (Admin)*
+/scrapeproxy - Scrape proxies
 /proxylist - View alive proxies
 /testproxy ip port - Test proxy
 
@@ -1926,7 +1926,7 @@ Test Result: {result.get('test_result', 'N/A')}
 /profile - Your profile
 /leaderboard - Top users
 
-*🔹 ADMIN*
+*🔹 ADMIN (Owner only)*
 /admin - Admin panel
 /ban user_id - Ban user
 /unban user_id - Unban user
@@ -1935,10 +1935,9 @@ Test Result: {result.get('test_result', 'N/A')}
 /backup - Backup database
 
 💡 *CC Format:* `CC|MM|YY|CVV`
-        """
-        
-        await update.message.reply_text(help_text, parse_mode='Markdown')
-
+    """
+    await update.message.reply_text(help_text, parse_mode='Markdown')
+    
     async def owner_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_id = update.effective_user.id
         if user_id != OWNER_ID:
