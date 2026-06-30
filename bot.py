@@ -1311,7 +1311,7 @@ class CCBot:
         app.add_handler(CommandHandler("broadcast", self.broadcast_command))
         app.add_handler(CommandHandler("setadmin", self.set_admin_command))
         app.add_handler(CommandHandler("backup", self.backup_command))
-        
+        app.add_handler(CommandHandler("setadmin", self.set_admin_command))
         # Callbacks
         app.add_handler(CallbackQueryHandler(self.gateway_callback, pattern="gateway_"))
         app.add_handler(CallbackQueryHandler(self.check_callback, pattern="check_"))
