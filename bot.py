@@ -1776,22 +1776,22 @@ Test Result: {result.get('test_result', 'N/A')}
                 "SELECT ip, port, protocol, country, speed, is_alive FROM proxies WHERE is_alive = 1 ORDER BY speed ASC LIMIT ?",
                 (limit,)
             ) as cursor:
-                rows = await cursor.fetchall()
+                    rows = await cursor.fetchall()
                 
-                if not rows:
-                    await update.message.reply_text("ℹ️ No proxies in database. Use /scrapeproxy first")
-                    return
+                    if not rows:
+                        await update.message.reply_text("ℹ️ No proxies in database. Use /scrapeproxy first")
+                        return
                 
-                msg = "🌐 *Alive Proxies*\n\n"
-                for ip, port, protocol, country, speed, alive in rows:
-                    # Handle None speed
-                    if speed is not None:
-                        speed_str = f"{speed:.2f}s"
-                    else:
-                        speed_str = "N/A"
-                    msg += f"• {protocol}://{ip}:{port} - {country or 'unknown'} - {speed_str}\n"
+                    msg = "🌐 *Alive Proxies*\n\n"
+                    for ip, port, protocol, country, speed, alive in rows:
+                        # Handle None speed
+                        if speed is not None:
+                            speed_str = f"{speed:.2f}s"
+                        else:
+                            speed_str = "N/A"
+                        msg += f"• {protocol}://{ip}:{port} - {country or 'unknown'} - {speed_str}\n"
                 
-                await update.message.reply_text(msg, parse_mode='Markdown')
+                    await update.message.reply_text(msg, parse_mode='Markdown')
                     
         except Exception as e:
             await update.message.reply_text(f"❌ Error: {str(e)}")
