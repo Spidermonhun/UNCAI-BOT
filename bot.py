@@ -39,19 +39,7 @@ import dns.resolver
 import whois
 from urllib.parse import urlparse, urljoin
 import xml.etree.ElementTree as ET
-# ============================================
-# FORCE OWNER AS ADMIN - DIRECT DATABASE FIX
-# ============================================
-try:
-    import sqlite3
-    conn = sqlite3.connect("/tmp/cc_bot.db")
-    conn.execute("UPDATE users SET is_admin = 1 WHERE user_id = ?", (OWNER_ID,))
-    conn.commit()
-    conn.close()
-    print(f"✅ FORCED ADMIN: User {OWNER_ID} is now admin")
-except Exception as e:
-    print(f"⚠️ Could not force admin: {e}")
-# ============================================
+
 # Apply async patches
 nest_asyncio.apply()
 try:
@@ -79,7 +67,19 @@ MAX_RETRIES = 2
 
 LOG_LEVEL = "INFO"
 LOG_FILE = "/tmp/bot.log"
-
+# ============================================
+# FORCE OWNER AS ADMIN - DIRECT DATABASE FIX
+# ============================================
+try:
+    import sqlite3
+    conn = sqlite3.connect("/tmp/cc_bot.db")
+    conn.execute("UPDATE users SET is_admin = 1 WHERE user_id = ?", (OWNER_ID,))
+    conn.commit()
+    conn.close()
+    print(f"✅ FORCED ADMIN: User {OWNER_ID} is now admin")
+except Exception as e:
+    print(f"⚠️ Could not force admin: {e}")
+# ============================================
 # -----------------------------------------------------------------------------
 # LOGGING
 # -----------------------------------------------------------------------------
