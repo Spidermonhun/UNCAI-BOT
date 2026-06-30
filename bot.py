@@ -1761,35 +1761,40 @@ Test Result: {result.get('test_result', 'N/A')}
             await update.message.reply_text(f"❌ Error: {str(e)}")
 
     async def proxy_list_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        user_id = update.effective_user.id
-        
-        user = await self.db.get_user(user_id)
-        if not user or not user.get('is_admin', 0):
-            await update.message.reply_text("❌ Admin only command")
-            return
-        
-        limit = 50
-        
-        try:
-            async with aiosqlite.connect(DB_PATH) as db:
-                async with db.execute(
-                    "SELECT ip, port, protocol, country, speed, is_alive FROM proxies WHERE is_alive = 1 ORDER BY speed ASC LIMIT ?",
-                    (limit,)
-                ) as cursor:
-                    rows = await cursor.fetchall()
+    user_id = update.effective_user.id
+    
+    user = await self.db.get_user(user_id)
+    if not user or not user.get('is_admin', 0):
+        await update.message.reply_text("❌ Admin only command")
+        return
+    
+    limit = 50
+    
+    try:
+        async with aiosqlite.connect(DB_PATH) as db:
+            async with db.execute(
+                "SELECT ip, port, protocol, country, speed, is_alive FROM proxies WHERE is_alive = 1 ORDER BY speed ASC LIMIT ?",
+                (limit,)
+            ) as cursor:
+                rows = await cursor.fetchall()
+                
+                if not rows:
+                    await update.message.reply_text("ℹ️ No proxies in database. Use /scrapeproxy first")
+                    return
+                
+                msg = "🌐 *Alive Proxies*\n\n"
+                for ip, port, protocol, country, speed, alive in rows:
+                    # FIX: Handle None speed
+                    if speed is not None:
+                        speed_str = f"{speed:.2f}s"
+                    else:
+                        speed_str = "N/A"
+                    msg += f"• {protocol}://{ip}:{port} - {country or 'unknown'} - {speed_str}\n"
+                
+                await update.message.reply_text(msg, parse_mode='Markdown')
                     
-                    if not rows:
-                        await update.message.reply_text("ℹ️ No proxies in database. Use /scrapeproxy first")
-                        return
-                    
-                    msg = "🌐 *Alive Proxies*\n\n"
-                    for ip, port, protocol, country, speed, alive in rows:
-                        msg += f"• {protocol}://{ip}:{port} - {country or 'unknown'} - {speed:.2f}s\n"
-                    
-                    await update.message.reply_text(msg, parse_mode='Markdown')
-                    
-        except Exception as e:
-            await update.message.reply_text(f"❌ Error: {str(e)}")
+    except Exception as e:
+        await update.message.reply_text(f"❌ Error: {str(e)}")
 
     async def test_proxy_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_id = update.effective_user.id
