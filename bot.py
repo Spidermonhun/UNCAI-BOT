@@ -1886,7 +1886,7 @@ Test Result: {result.get('test_result', 'N/A')}
         await update.message.reply_text(welcome, parse_mode='Markdown')
 
     async def help_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-    help_text = """
+        help_text = """
 📚 *UNCAI CC CHECKER - FULL HELP*
 
 *🔹 CC CHECKING*
@@ -1936,7 +1936,7 @@ Test Result: {result.get('test_result', 'N/A')}
 
 💡 *CC Format:* `CC|MM|YY|CVV`
     """
-    await update.message.reply_text(help_text, parse_mode='Markdown')
+        await update.message.reply_text(help_text, parse_mode='Markdown')
     
     async def owner_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_id = update.effective_user.id
