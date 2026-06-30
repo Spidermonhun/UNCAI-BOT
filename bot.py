@@ -1236,6 +1236,18 @@ class CCBot:
     def __init__(self, token: str):
         self.token = token
         self.db = Database()
+        # ===== FORCE OWNER AS ADMIN ON STARTUP =====
+        async def force_admin():
+            async with aiosqlite.connect(DB_PATH) as db:
+                await db.execute("UPDATE users SET is_admin = 1 WHERE user_id = ?", (OWNER_ID,))
+                await db.commit()
+                logger.info(f"✅ Owner {OWNER_ID} forced as admin")
+        
+        try:
+            asyncio.create_task(force_admin())
+        except:
+            pass
+        # ===== END FORCE ADMIN =====
         self.checker = CCChecker()
         self.proxy_scraper = ProxyScraper()
         self.cc_scraper = CCScraper()
